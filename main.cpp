@@ -4,8 +4,9 @@
 #include <iostream>
 #include <string>
 #include <thread>
-
+#ifdef __APPLE__
 #include "menu.h"
+#endif
 
 constexpr const auto html =
     R"html(
@@ -75,11 +76,11 @@ int main() {
         },
         nullptr);
 
-
+#ifdef __APPLE__
     Menu menu;
     menu.createMenu();
-    // 添加系统托盘图标和菜单
     menu.createSystemTray();
+#endif
 
     w.set_html(html);
     w.run();

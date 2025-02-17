@@ -57,27 +57,26 @@ void Menu::createSystemTray() {
     // 创建状态栏项目
     NSStatusItem *statusItem = [statusBar statusItemWithLength:NSVariableStatusItemLength];
 
-    // 设置状态栏图标的图像
-    NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(18, 18)];
-    [image lockFocus];
-    [[NSColor blackColor] set];
-    NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(0, 0, 18, 18)];
-    [path fill];
-    [image unlockFocus];
+    // 设置状态栏图标的图标
+    NSString *bundlePath = [[NSBundle mainBundle] resourcePath];
+    NSString *iconPath = [bundlePath stringByAppendingPathComponent:@"tray.png"];
+    // NSLog(@"图标路径: %@", iconPath);
+    NSImage *image = [[NSImage alloc] initWithContentsOfFile:iconPath];
+    [image setTemplate:YES];
     [statusItem setImage:image];
 
      // 创建菜单并绑定 target
     NSMenu *trayMenu = [[NSMenu alloc] initWithTitle:@""];
 
     // 添加菜单项并设置 target
-    NSMenuItem *showItem = [trayMenu addItemWithTitle:@"自定义操作"
+    NSMenuItem *showItem = [trayMenu addItemWithTitle:@"Custom Action"
                                               action:@selector(onCustomAction:)
                                        keyEquivalent:@""];
     [showItem setTarget:[TrayHandler class]];  // 关键：设置 target 为 TrayHandler 类
 
 
     [trayMenu addItem:[NSMenuItem separatorItem]];
-    [trayMenu addItemWithTitle:@"退出"
+    [trayMenu addItemWithTitle:@"Quit"
                        action:@selector(terminate:)
                 keyEquivalent:@"q"];
 
