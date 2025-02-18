@@ -13,9 +13,13 @@ FetchContent_Declare(
         GIT_TAG 0.12.0)
 FetchContent_MakeAvailable(webview)
 
-add_executable(${PROJECT_NAME} menu.h menu.mm main.cpp
-)
-target_link_libraries(${PROJECT_NAME} PRIVATE webview::core "-framework Cocoa")
+if (APPLE)
+    set(MACOSX_SOURCES menu.mm menu.h)
+    set(MACOSX_LINK_LIBRARIES "-framework Cocoa")
+endif ()
+
+add_executable(${PROJECT_NAME} main.cpp ${MACOSX_SOURCES})
+target_link_libraries(${PROJECT_NAME} PRIVATE webview::core ${MACOSX_LINK_LIBRARIES})
 
 if (APPLE)
     set_target_properties(${PROJECT_NAME} PROPERTIES
