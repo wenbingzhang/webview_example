@@ -14,11 +14,21 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(webview)
 
 if (APPLE)
-    set(MACOSX_SOURCES menu.mm menu.h)
+    set(PLATFORM_SOURCES platform/macos/menu.mm platform/macos/menu.h)
     set(MACOSX_LINK_LIBRARIES "-framework Cocoa")
 endif ()
 
-add_executable(${PROJECT_NAME} main.cpp ${MACOSX_SOURCES})
+if (WIN32)
+    if(MSVC)
+        add_compile_options(/utf-8)
+    else()
+        add_compile_options(-finput-charset=UTF-8 -fexec-charset=UTF-8)
+    endif()
+    add_definitions(-DUNICODE -D_UNICODE)  # 强制使用宽字符API
+    set(PLATFORM_SOURCES platform/windows/menu.cpp platform/windows/menu.h)
+endif ()
+
+add_executable(${PROJECT_NAME} main.cpp ${PLATFORM_SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE webview::core ${MACOSX_LINK_LIBRARIES})
 
 if (APPLE)

@@ -7,6 +7,10 @@
 #ifdef __APPLE__
 #include "menu.h"
 #endif
+#ifdef __WIN32__
+#include "platform/windows/menu.h"
+#include <windows.h>
+#endif
 
 constexpr const auto html =
     R"html(
@@ -52,7 +56,7 @@ int main() {
 
     webview::webview w(true, nullptr);
     w.set_title("Bind Example");
-    w.set_size(480, 320, WEBVIEW_HINT_NONE);
+//    w.set_size(480, 320, WEBVIEW_HINT_NONE);
 
     // A binding that counts up or down and immediately returns the new value.
     w.bind("count", [&](const std::string &req) -> std::string {
@@ -81,6 +85,13 @@ int main() {
     menu.createMenu();
     menu.createSystemTray();
 #endif
+
+#ifdef __WIN32__
+    Menu menu(static_cast<HWND>(w.window().value()));
+    menu.createMenu();
+    menu.createSystemTray();
+#endif
+
 
     w.set_html(html);
     w.run();
