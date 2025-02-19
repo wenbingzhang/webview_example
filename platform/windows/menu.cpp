@@ -32,6 +32,15 @@ LRESULT CALLBACK SubclassProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     return 0;
             }
             break;
+        case WM_CLOSE:
+        {
+            NOTIFYICONDATA nid = {0};
+            nid.cbSize = sizeof(NOTIFYICONDATA);
+            nid.hWnd = hWnd;      // 必须与添加图标时的hWnd一致
+            nid.uID = IDR_MAINFRAME;          // 必须与添加图标时的uID一致
+            Shell_NotifyIcon(NIM_DELETE, &nid);
+            break;
+        }
         default:
             break;
     }
@@ -44,12 +53,6 @@ Menu::Menu(HWND hWnd) {
 
 Menu::~Menu() {
     m_hWnd = nullptr;
-
-//    NOTIFYICONDATA nid = {0};
-//    nid.cbSize = sizeof(NOTIFYICONDATA);
-//    nid.hWnd = m_hWnd;  // 窗口未销毁，句柄有效
-//    nid.uID = IDR_MAINFRAME;
-//    Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 
 void Menu::createMenu() {
