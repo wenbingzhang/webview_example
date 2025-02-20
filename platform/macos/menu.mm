@@ -29,9 +29,7 @@ void Menu::createMenu() {
     [mainMenu addItem:appMenuItem];
 
     // 创建编辑菜单
-    NSMenuItem *editMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit"
-    action:nil
-    keyEquivalent:@""];
+    NSMenuItem *editMenuItem = [[NSMenuItem alloc] initWithTitle:@"Edit" action:nil keyEquivalent:@""];
     NSMenu *editMenu = [[NSMenu alloc] initWithTitle:@"Edit"];
     [editMenu addItemWithTitle:@"Undo" action:@selector(undo:) keyEquivalent:@"z"];
     [editMenu addItemWithTitle:@"Redo" action:@selector(redo:) keyEquivalent:@"y"];
