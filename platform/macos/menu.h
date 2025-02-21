@@ -14,7 +14,7 @@ public:
     void createMenu();
     void createSystemTray();
 
-    static void customAction();
+    void customAction();
     // id mainMenu;  // 存储主菜单（作为成员变量）
 };
 

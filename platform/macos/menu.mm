@@ -2,13 +2,30 @@
 #import <Cocoa/Cocoa.h>
 #include  <iostream>
 
-// Objective-C 类定义（直接在 .mm 文件中实现）
+#import <functional>
+
 @interface TrayHandler : NSObject
-+ (void)onCustomAction:(id)sender;
+- (instancetype)initWithLambda:(std::function<void()>*)lambda;
+- (void)onClicked:(id)sender;
 @end
 
-@implementation TrayHandler
-+ (void)onCustomAction:(id)sender { Menu::customAction(); }
+@implementation TrayHandler {
+    std::function<void()> callback;  // 用 std::function 存储 lambda
+}
+
+- (instancetype)initWithLambda:(std::function<void()>*)lambda {
+    self = [super init];
+    if (self) {
+        callback = *lambda;  // 保存 lambda
+    }
+    return self;
+}
+
+- (void)onClicked:(id)sender {
+    if (callback) {
+        callback();  // 调用 lambda
+    }
+}
 @end
 
 Menu::Menu() {
@@ -67,10 +84,15 @@ void Menu::createSystemTray() {
     NSMenu *trayMenu = [[NSMenu alloc] initWithTitle:@""];
 
     // 添加菜单项并设置 target
-    NSMenuItem *showItem = [trayMenu addItemWithTitle:@"Custom Action"
-                                              action:@selector(onCustomAction:)
-                                       keyEquivalent:@""];
-    [showItem setTarget:[TrayHandler class]];  // 关键：设置 target 为 TrayHandler 类
+    NSMenuItem *customItem = [trayMenu addItemWithTitle:@"Custom Action" action:@selector(onClicked:) keyEquivalent:@""];
+    // 创建 lambda 表达式并传递给 TrayHandler
+    std::function<void()> customActionLambda = [&]() {
+        std::cout << "C++: Custom Action triggered via lambda\n";  // lambda 内容
+        customAction();  // 调用 C++ 自定义函数
+    };
+
+    TrayHandler *handler = [[TrayHandler alloc] initWithLambda:&customActionLambda];
+    [customItem setTarget:handler];  // 设置每个 TrayHandler 实例作为 target
 
 
     [trayMenu addItem:[NSMenuItem separatorItem]];
@@ -82,7 +104,6 @@ void Menu::createSystemTray() {
     [statusItem setMenu:trayMenu];
 }
 
-void Menu::customAction()
-{
-    std::cout << "C++: Custom Action\n";
+void Menu::customAction() {
+    std::cout << "C++: Custom Action triggered\n";
 }
