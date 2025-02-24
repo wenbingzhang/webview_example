@@ -56,9 +56,7 @@ int main() {
 
     webview::webview w(true, nullptr);
     w.set_title("Bind Example");
-#ifndef __WIN32__
     w.set_size(480, 320, WEBVIEW_HINT_NONE);
-#endif
 
 
     // A binding that counts up or down and immediately returns the new value.

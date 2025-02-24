@@ -88,7 +88,6 @@ void Menu::createSystemTray() {
     // 创建 lambda 表达式并传递给 TrayHandler
     std::function<void()> customActionLambda = [&]() {
         std::cout << "C++: Custom Action triggered via lambda\n";  // lambda 内容
-        customAction();  // 调用 C++ 自定义函数
     };
 
     TrayHandler *handler = [[TrayHandler alloc] initWithLambda:&customActionLambda];
@@ -102,8 +101,4 @@ void Menu::createSystemTray() {
 
     // 将菜单设置为状态栏项目的子菜单
     [statusItem setMenu:trayMenu];
-}
-
-void Menu::customAction() {
-    std::cout << "C++: Custom Action triggered\n";
 }

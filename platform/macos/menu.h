@@ -13,8 +13,6 @@ public:
     // 创建菜单
     void createMenu();
     void createSystemTray();
-
-    void customAction();
     // id mainMenu;  // 存储主菜单（作为成员变量）
 };
 
